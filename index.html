@@ -3,11 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>ไร่บอส</title>
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="ไร่บอส">
-<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAADbklEQVR4nO3YP2rkZgCHYY3ZI/gEPpEx6cLWLgKGpEgRSLXFQootFlKkDqQJBJ/IJ/AdnGqX/ePxSJZmpHl5nt6jr3j5+ZN2w4quri+f1nw+x/Nw/7hb47kne6h4OUXkR32AiNnnWHEf5UeFzFhLh73ojwmZ11oq7EV+RMgsZW7YF3MPIGaWNLenWUGLmWOY09Wr5l3InMrUK8jkhRYzpzS1t0lBi5k1TOludNBiZk1j+xsVtJjZgjEdHgxazGzJoR5nf4eGLXkxaOvMFr3U5d6gxcyW7evz2aDFzDl4rlN3aFK+C9o6c06+7dVCk/JV0NaZc/RltxaalM9BW2fO2ad+LTQpgiZlNwyuG3RYaFIETYqgSRE0KRdeCCmx0KQImhRBkyJoUgRNiqBJETQpgiZF0KQImhRBk/Jm7QNsyS8//jb89MPPax9jkg//vB/+/PfD2sfYDAtNiqBJETQpgibFS+EBf/33cfjj73drH2MYhmH49e3vw+3N3drH2DQLTYqgSRE0KYImRdCkCJoUQZMiaFIETYqgSRE0KYImRdCkCJoUQZMiaFIETYqgSRE0KYImRdCkCJoUQZMiaFIETYqgSRE0KYImRdCkCJoUQZMiaFIETYqgSRE0KYImRdCkCJoUQZMiaFIETYqgSRE0KYImRdCkCJoUQZMiaFIETYqgSRE0KYImRdCkCJoUQZMiaFIETYqgSRE0KYImRdCkCJoUQZMiaFIETYqgSRE0KYIm5c3aB9i625u74fbmbu1jMJKFJkXQpAiaFEGTsru6vnxa+xCwFAtNiqBJETQpgiZF0KQImhRBkyJoUgRNiqBJETQpgiZF0KQImhRBkyJoUgRNiqBJETQpgiZF0KQImhRBkyJoUgRNiqBJETQpFw/3j7u1DwFLsdCkCJoUQZMiaFIuhmEYvBhS8HD/uLPQpAialM9Bu3Zwzj71a6FJ+SpoK805+rJbC03Kd0Fbac7Jt71aaFKeDdpKcw6e63TvQouaLdvX54tXDlGzRS916Q5NysGgrTRbcqjHUQstarZgTIejrxyiZk1j+5t0hxY1a5jS3eSXQlFzSlN7mxXn1fXl05y/h31eO5yzPttZa45hTlezv0OLmiXN7WnRGF1BeK2lhvEo6ypsxlr6P/xRrwvCZp9jXVVPdv8VN6d43/ofttKzr9Ask3oAAAAASUVORK5CYII=">
+<title>ไร่บอส v4 — Firebase Live</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -540,11 +536,11 @@ body::before {
   <div class="sec">
     <div class="sec-label" id="lbl-rows">ร่องปลูก</div>
     <div class="row-filter" id="rowFilter">
-      <div class="filter-chip on" id="fc-all" onclick="setFilter('all',this)">ใช้งาน</div>
-      
+      <div class="filter-chip on" id="fc-all" onclick="setFilter('all',this)">ทั้งหมด</div>
+      <div class="filter-chip" id="fc-active" onclick="setFilter('active',this)">ใช้งาน</div>
       <div class="filter-chip" id="fc-water" onclick="setFilter('water',this)">เปิดน้ำ</div>
       <div class="filter-chip" id="fc-dry" onclick="setFilter('dry',this)">แห้ง</div>
-      <div class="filter-chip" id="fc-inactive" onclick="setFilter('inactive',this)">➕ ร่อง 6–22</div>
+      <div class="filter-chip" id="fc-inactive" onclick="setFilter('inactive',this)">ว่าง</div>
     </div>
 
     <div class="row-list" id="rowList"></div>
@@ -835,7 +831,7 @@ function getFilteredRows() {
     case 'water':    return rows.filter(r=>r.waterOn);
     case 'dry':      return rows.filter(r=>r.active && r.moisture<50);
     case 'inactive': return rows.filter(r=>!r.active);
-    default:         return rows.filter(r=>r.active); // ซ่อนร่องว่าง 6-22
+    default: return rows;
   }
 }
 
@@ -1658,11 +1654,11 @@ const TH = {
   lblTotal:       'ทั้งหมด',
   lblAlerts:      '⚠️ แจ้งเตือน',
   lblRows:        'ร่องปลูก',
-  fcAll:          'ใช้งาน',
+  fcAll:          'ทั้งหมด',
   fcActive:       'ใช้งาน',
   fcWater:        'เปิดน้ำ',
   fcDry:          'แห้ง',
-  fcInactive:     '➕ ร่อง 6–22',
+  fcInactive:     'ว่าง',
   btnAddRow:      '＋ เพิ่มร่องใหม่',
   lblNotif:       'การแจ้งเตือน',
   btnEmg:         '⛔ หยุดฉุกเฉิน — ปิดน้ำทุกร่อง',
@@ -1719,11 +1715,11 @@ const EN = {
   lblTotal:       'Total',
   lblAlerts:      '⚠️ Alerts',
   lblRows:        'Farm Rows',
-  fcAll:          'Active',
+  fcAll:          'All',
   fcActive:       'Active',
   fcWater:        'Watering',
   fcDry:          'Dry',
-  fcInactive:     '➕ Rows 6–22',
+  fcInactive:     'Empty',
   btnAddRow:      '＋ Add New Row',
   lblNotif:       'Notifications',
   btnEmg:         '⛔ EMERGENCY STOP — Close All Water',
