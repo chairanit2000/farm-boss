@@ -1,0 +1,1866 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ไร่บอส</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ไร่บอส">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAADbklEQVR4nO3YP2rkZgCHYY3ZI/gEPpEx6cLWLgKGpEgRSLXFQootFlKkDqQJBJ/IJ/AdnGqX/ePxSJZmpHl5nt6jr3j5+ZN2w4quri+f1nw+x/Nw/7hb47kne6h4OUXkR32AiNnnWHEf5UeFzFhLh73ojwmZ11oq7EV+RMgsZW7YF3MPIGaWNLenWUGLmWOY09Wr5l3InMrUK8jkhRYzpzS1t0lBi5k1TOludNBiZk1j+xsVtJjZgjEdHgxazGzJoR5nf4eGLXkxaOvMFr3U5d6gxcyW7evz2aDFzDl4rlN3aFK+C9o6c06+7dVCk/JV0NaZc/RltxaalM9BW2fO2ad+LTQpgiZlNwyuG3RYaFIETYqgSRE0KRdeCCmx0KQImhRBkyJoUgRNiqBJETQpgiZF0KQImhRBk/Jm7QNsyS8//jb89MPPax9jkg//vB/+/PfD2sfYDAtNiqBJETQpgibFS+EBf/33cfjj73drH2MYhmH49e3vw+3N3drH2DQLTYqgSRE0KYImRdCkCJoUQZMiaFIETYqgSRE0KYImRdCkCJoUQZMiaFIETYqgSRE0KYImRdCkCJoUQZMiaFIETYqgSRE0KYImRdCkCJoUQZMiaFIETYqgSRE0KYImRdCkCJoUQZMiaFIETYqgSRE0KYImRdCkCJoUQZMiaFIETYqgSRE0KYImRdCkCJoUQZMiaFIETYqgSRE0KYImRdCkCJoUQZMiaFIETYqgSRE0KYIm5c3aB9i625u74fbmbu1jMJKFJkXQpAiaFEGTsru6vnxa+xCwFAtNiqBJETQpgiZF0KQImhRBkyJoUgRNiqBJETQpgiZF0KQImhRBkyJoUgRNiqBJETQpgiZF0KQImhRBkyJoUgRNiqBJETQpFw/3j7u1DwFLsdCkCJoUQZMiaFIuhmEYvBhS8HD/uLPQpAialM9Bu3Zwzj71a6FJ+SpoK805+rJbC03Kd0Fbac7Jt71aaFKeDdpKcw6e63TvQouaLdvX54tXDlGzRS916Q5NysGgrTRbcqjHUQstarZgTIejrxyiZk1j+5t0hxY1a5jS3eSXQlFzSlN7mxXn1fXl05y/h31eO5yzPttZa45hTlezv0OLmiXN7WnRGF1BeK2lhvEo6ypsxlr6P/xRrwvCZp9jXVVPdv8VN6d43/ofttKzr9Ask3oAAAAASUVORK5CYII=">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+<style>
+:root {
+  --soil: #1e1208;
+  --soil2: #2c1a0e;
+  --soil3: #3d2410;
+  --bark: #5c3d1e;
+  --leaf: #2d5a1b;
+  --leaf2: #3d7a27;
+  --green: #6abf50;
+  --lime: #9ed040;
+  --grape: #8b6fc0;
+  --melon: #f5a623;
+  --durian: #d4b04a;
+  --water: #38c6f5;
+  --red: #e84040;
+  --amber: #ff9800;
+  --text: #f0e8d8;
+  --text2: #9a8060;
+  --text3: #6a5540;
+  --card: rgba(44,26,14,0.92);
+  --card2: rgba(55,32,16,0.9);
+  --border: rgba(92,61,30,0.5);
+  --border2: rgba(92,61,30,0.25);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+body {
+  font-family: 'Noto Sans Thai', sans-serif;
+  background: var(--soil);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 30% 20%, rgba(45,90,27,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 80% 70%, rgba(139,111,192,0.07) 0%, transparent 60%);
+  pointer-events:none; z-index:0;
+}
+
+.app { position:relative; z-index:1; max-width:430px; margin:0 auto; padding-bottom:76px; }
+
+/* NAV */
+.bottom-nav {
+  position:fixed; bottom:0; left:0; right:0;
+  max-width:430px; margin:0 auto;
+  background:rgba(15,8,3,0.97);
+  backdrop-filter:blur(16px);
+  border-top:1px solid var(--border);
+  display:flex; padding:6px 0 14px; z-index:100;
+}
+
+.nav-btn { flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; cursor:pointer; opacity:0.35; transition:opacity 0.2s; padding:4px 0; }
+.nav-btn.active { opacity:1; }
+.nav-btn .ni { font-size:22px; }
+.nav-btn .nl { font-size:9px; color:var(--text2); letter-spacing:0.3px; }
+.nav-btn.active .nl { color:var(--lime); }
+
+/* PAGE */
+.page { display:none; }
+.page.active { display:block; }
+
+/* HEADER */
+.header {
+  padding:16px 16px 12px;
+  display:flex; align-items:flex-start; justify-content:space-between;
+  border-bottom:1px solid var(--border2);
+}
+
+.farm-label { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:3px; color:var(--durian); text-transform:uppercase; }
+.farm-name { font-size:22px; font-weight:700; margin-top:2px; line-height:1.1; }
+.farm-sub { font-size:11px; color:var(--text2); margin-top:3px; }
+
+.weather-box { text-align:right; }
+.temp { font-family:'IBM Plex Mono',monospace; font-size:26px; color:var(--melon); line-height:1; }
+.wsub { font-size:10px; color:var(--text2); margin-top:3px; }
+
+/* SECTION */
+.sec { padding:14px 16px 0; }
+.sec-label {
+  font-size:10px; letter-spacing:2px; color:var(--text3);
+  font-family:'IBM Plex Mono',monospace; text-transform:uppercase;
+  display:flex; align-items:center; gap:8px; margin-bottom:10px;
+}
+.sec-label::after { content:''; flex:1; height:1px; background:var(--border2); }
+
+/* STATS */
+.stats-bar {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:6px;
+}
+
+.stat-box {
+  background:var(--card); border:1px solid var(--border2); border-radius:12px;
+  padding:10px 6px; text-align:center;
+}
+
+.stat-val { font-family:'IBM Plex Mono',monospace; font-size:18px; font-weight:600; display:block; }
+.stat-lbl { font-size:9px; color:var(--text2); margin-top:2px; }
+
+/* ===== ROWS PANEL ===== */
+.row-filter {
+  display:flex; gap:5px; overflow-x:auto; padding-bottom:2px; margin-bottom:10px;
+}
+.row-filter::-webkit-scrollbar { display:none; }
+
+.filter-chip {
+  flex-shrink:0; padding:4px 12px; border-radius:20px;
+  border:1px solid var(--border); background:transparent;
+  font-size:11px; color:var(--text2); cursor:pointer;
+  font-family:'Noto Sans Thai',sans-serif; transition:all 0.2s;
+  white-space:nowrap;
+}
+.filter-chip.on { background:rgba(106,191,80,0.12); border-color:var(--green); color:var(--green); }
+
+/* Row list */
+.row-list { display:flex; flex-direction:column; gap:6px; }
+
+.row-item {
+  background:var(--card); border:1px solid var(--border2);
+  border-radius:14px; padding:11px 13px;
+  display:flex; align-items:center; gap:10px;
+  position:relative; overflow:hidden; cursor:pointer;
+  transition:border-color 0.2s, box-shadow 0.2s;
+}
+
+.row-item::before {
+  content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+  background:var(--rc, #666); border-radius:14px 0 0 14px;
+}
+
+.row-item.water-on { border-color:rgba(56,198,245,0.3); }
+.row-item.water-on::after {
+  content:''; position:absolute; inset:0;
+  background:rgba(56,198,245,0.03); pointer-events:none;
+}
+
+.row-item.inactive { opacity:0.55; }
+
+.row-num {
+  font-family:'IBM Plex Mono',monospace; font-size:11px;
+  color:var(--text3); width:22px; flex-shrink:0; text-align:center;
+}
+
+.row-emoji { font-size:22px; flex-shrink:0; }
+
+.row-info { flex:1; min-width:0; }
+.row-name { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.row-detail { font-size:10px; color:var(--text2); margin-top:1px; }
+.row-zone { font-size:10px; color:var(--text3); margin-top:1px; }
+
+.row-right { display:flex; flex-direction:column; align-items:flex-end; gap:5px; flex-shrink:0; }
+
+.mini-toggle {
+  width:38px; height:21px; background:var(--bark); border-radius:11px;
+  position:relative; cursor:pointer; transition:background 0.25s;
+  border:1px solid var(--border); flex-shrink:0;
+}
+.mini-toggle.on { background:var(--water); border-color:var(--water); }
+.mini-toggle::after {
+  content:''; position:absolute; width:15px; height:15px; background:white;
+  border-radius:50%; top:3px; left:3px; transition:transform 0.25s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 1px 4px rgba(0,0,0,0.35);
+}
+.mini-toggle.on::after { transform:translateX(17px); }
+
+.moisture-badge {
+  font-size:10px; font-family:'IBM Plex Mono',monospace;
+  padding:2px 6px; border-radius:8px;
+}
+.moisture-badge.ok { background:rgba(106,191,80,0.12); color:var(--green); border:1px solid rgba(106,191,80,0.2); }
+.moisture-badge.warn { background:rgba(255,152,0,0.12); color:var(--amber); border:1px solid rgba(255,152,0,0.25); }
+.moisture-badge.dry { background:rgba(232,64,64,0.12); color:var(--red); border:1px solid rgba(232,64,64,0.25); }
+.moisture-badge.idle { background:rgba(92,61,30,0.35); color:var(--text3); border:1px solid var(--border2); }
+
+.flow-dots { display:flex; gap:2px; align-items:center; }
+.fdot { width:4px; height:4px; background:var(--water); border-radius:50%; animation:fp 0.9s infinite; }
+.fdot:nth-child(2){animation-delay:0.2s} .fdot:nth-child(3){animation-delay:0.4s}
+@keyframes fp { 0%,100%{opacity:0.2}50%{opacity:1} }
+
+/* Add row button */
+.add-row-btn {
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  background:transparent; border:1px dashed var(--bark);
+  border-radius:14px; padding:12px; cursor:pointer;
+  font-size:13px; color:var(--text3); transition:all 0.2s;
+  font-family:'Noto Sans Thai',sans-serif;
+  margin-top:6px; width:100%;
+}
+.add-row-btn:hover, .add-row-btn:active { border-color:var(--lime); color:var(--lime); background:rgba(158,208,64,0.05); }
+
+/* ===== MODAL ===== */
+.modal-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.75);
+  z-index:200; display:flex; align-items:flex-end;
+  opacity:0; pointer-events:none; transition:opacity 0.3s;
+}
+.modal-overlay.open { opacity:1; pointer-events:all; }
+
+.modal-sheet {
+  width:100%; max-width:430px; margin:0 auto;
+  background:var(--soil2); border-radius:20px 20px 0 0;
+  border:1px solid var(--border); border-bottom:none;
+  padding:0 0 30px; transform:translateY(100%);
+  transition:transform 0.35s cubic-bezier(.4,0,.2,1);
+}
+.modal-overlay.open .modal-sheet { transform:translateY(0); }
+
+.modal-handle { width:36px; height:4px; background:var(--bark); border-radius:2px; margin:12px auto 16px; }
+
+.modal-title { font-size:16px; font-weight:700; padding:0 20px 14px; border-bottom:1px solid var(--border2); }
+
+.modal-body { padding:16px 20px; }
+
+.form-group { margin-bottom:14px; }
+.form-label { font-size:11px; color:var(--text2); letter-spacing:1px; margin-bottom:6px; display:block; font-family:'IBM Plex Mono',monospace; text-transform:uppercase; }
+
+.form-input {
+  width:100%; background:var(--soil3); border:1px solid var(--border);
+  border-radius:10px; padding:10px 12px; font-size:14px;
+  font-family:'Noto Sans Thai',sans-serif; color:var(--text);
+  outline:none; transition:border-color 0.2s;
+}
+.form-input:focus { border-color:var(--leaf2); }
+.form-input option { background:var(--soil2); }
+
+.crop-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
+
+.crop-btn {
+  background:var(--soil3); border:1px solid var(--border); border-radius:10px;
+  padding:8px 4px; text-align:center; cursor:pointer; transition:all 0.2s;
+  font-family:'Noto Sans Thai',sans-serif;
+}
+.crop-btn span { display:block; font-size:22px; margin-bottom:3px; }
+.crop-btn small { font-size:10px; color:var(--text2); }
+.crop-btn.selected { border-color:var(--lime); background:rgba(158,208,64,0.1); }
+
+.modal-actions { display:flex; gap:8px; padding:0 20px; margin-top:4px; }
+
+.btn-cancel {
+  flex:1; padding:12px; background:transparent; border:1px solid var(--border);
+  border-radius:12px; color:var(--text2); font-size:14px; cursor:pointer;
+  font-family:'Noto Sans Thai',sans-serif; transition:all 0.2s;
+}
+.btn-cancel:active { background:var(--soil3); }
+
+.btn-save {
+  flex:2; padding:12px; background:linear-gradient(135deg,var(--leaf2),var(--leaf));
+  border:none; border-radius:12px; color:white; font-size:14px; font-weight:600;
+  cursor:pointer; font-family:'Noto Sans Thai',sans-serif; transition:all 0.2s;
+}
+.btn-save:active { opacity:0.85; transform:scale(0.98); }
+
+/* Delete btn in modal */
+.btn-delete {
+  padding:12px; background:rgba(232,64,64,0.1); border:1px solid rgba(232,64,64,0.3);
+  border-radius:12px; color:var(--red); font-size:14px; cursor:pointer;
+  font-family:'Noto Sans Thai',sans-serif; transition:all 0.2s;
+}
+.btn-delete:active { background:rgba(232,64,64,0.2); }
+
+/* ===== COMMAND PAGE ===== */
+.worker-chips { display:flex; gap:6px; overflow-x:auto; padding-bottom:2px; }
+.worker-chips::-webkit-scrollbar { display:none; }
+
+.wchip {
+  flex-shrink:0; display:flex; align-items:center; gap:5px;
+  padding:6px 12px; border-radius:20px; border:1px solid var(--border);
+  background:transparent; color:var(--text2); font-size:12px;
+  cursor:pointer; font-family:'Noto Sans Thai',sans-serif; transition:all 0.2s;
+}
+.wchip.active { background:rgba(106,191,80,0.12); border-color:var(--green); color:var(--green); }
+.wchip-dot { width:6px; height:6px; border-radius:50%; background:var(--green); animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
+
+.chat-box {
+  background:var(--card); border:1px solid var(--border2); border-radius:16px; overflow:hidden;
+}
+
+.chat-top {
+  padding:10px 14px; border-bottom:1px solid var(--border2);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.chat-to-name { font-size:14px; font-weight:600; }
+.chat-to-status { font-size:10px; color:var(--text2); display:flex; align-items:center; gap:4px; margin-top:1px; }
+
+.chat-area {
+  padding:12px; max-height:240px; overflow-y:auto;
+  display:flex; flex-direction:column; gap:8px; scroll-behavior:smooth;
+}
+.chat-area::-webkit-scrollbar { width:2px; }
+.chat-area::-webkit-scrollbar-thumb { background:var(--bark); }
+
+.msg { max-width:82%; animation:msgIn 0.3s ease; }
+.msg.boss { align-self:flex-end; }
+.msg.worker { align-self:flex-start; }
+
+@keyframes msgIn { from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)} }
+
+.bubble {
+  padding:8px 12px; font-size:13px; line-height:1.55; border-radius:14px;
+}
+.msg.boss .bubble {
+  background:linear-gradient(135deg,var(--leaf2),var(--leaf));
+  color:white; border-radius:14px 14px 4px 14px;
+}
+.msg.worker .bubble {
+  background:var(--soil3); border:1px solid var(--border2);
+  border-radius:14px 14px 14px 4px;
+}
+.msg-meta { font-size:10px; color:var(--text3); margin-top:3px; font-family:'IBM Plex Mono',monospace; }
+.msg.boss .msg-meta { text-align:right; }
+.msg-from { font-size:10px; color:var(--text3); margin-bottom:2px; }
+
+.quick-bar { display:flex; gap:5px; overflow-x:auto; padding:8px 12px; border-top:1px solid var(--border2); }
+.quick-bar::-webkit-scrollbar { display:none; }
+
+.qchip {
+  flex-shrink:0; background:var(--soil3); border:1px solid var(--border);
+  border-radius:16px; padding:5px 11px; font-size:11px; color:var(--text);
+  cursor:pointer; transition:all 0.2s; font-family:'Noto Sans Thai',sans-serif;
+  white-space:nowrap;
+}
+.qchip:active { background:rgba(106,191,80,0.1); border-color:var(--green); color:var(--green); }
+
+.input-bar { display:flex; gap:7px; padding:8px 12px; border-top:1px solid var(--border2); align-items:flex-end; }
+
+.msg-input {
+  flex:1; background:var(--soil3); border:1px solid var(--border2);
+  border-radius:12px; padding:9px 12px; font-size:14px;
+  font-family:'Noto Sans Thai',sans-serif; color:var(--text);
+  outline:none; resize:none; min-height:40px; max-height:90px;
+  transition:border-color 0.2s; line-height:1.4;
+}
+.msg-input::placeholder { color:var(--text3); }
+.msg-input:focus { border-color:var(--leaf2); }
+
+.send-btn {
+  width:40px; height:40px; background:linear-gradient(135deg,var(--leaf2),var(--leaf));
+  border:none; border-radius:12px; color:white; font-size:17px;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; transition:transform 0.15s;
+}
+.send-btn:active { transform:scale(0.9); }
+
+/* Typing */
+.typing-wrap { align-self:flex-start; }
+.typing-dots { display:flex; gap:3px; padding:8px 12px; background:var(--soil3); border:1px solid var(--border2); border-radius:14px 14px 14px 4px; }
+.tdot { width:5px; height:5px; background:var(--text3); border-radius:50%; animation:ty 1.2s infinite; }
+.tdot:nth-child(2){animation-delay:0.2s} .tdot:nth-child(3){animation-delay:0.4s}
+@keyframes ty { 0%,60%,100%{transform:translateY(0);opacity:0.4}30%{transform:translateY(-4px);opacity:1} }
+
+/* Broadcast */
+.broadcast-box {
+  background:var(--card); border:1px solid var(--border2); border-radius:14px;
+  padding:12px 14px; margin-top:10px;
+}
+.broadcast-title { font-size:12px; color:var(--amber); font-weight:600; margin-bottom:8px; display:flex; align-items:center; gap:5px; }
+.broadcast-input {
+  width:100%; background:var(--soil3); border:1px solid var(--border);
+  border-radius:10px; padding:9px 12px; font-size:13px;
+  font-family:'Noto Sans Thai',sans-serif; color:var(--text);
+  outline:none; margin-bottom:8px; transition:border-color 0.2s;
+}
+.broadcast-input:focus { border-color:var(--amber); }
+.broadcast-btn {
+  width:100%; padding:10px; background:rgba(255,152,0,0.15);
+  border:1px solid rgba(255,152,0,0.4); border-radius:10px;
+  color:var(--amber); font-size:13px; font-weight:600;
+  cursor:pointer; font-family:'Noto Sans Thai',sans-serif; transition:all 0.2s;
+}
+.broadcast-btn:active { background:rgba(255,152,0,0.25); }
+
+/* Workers page */
+.worker-full-card {
+  background:var(--card); border:1px solid var(--border2); border-radius:14px;
+  padding:13px 14px; margin-bottom:7px; display:flex; align-items:center; gap:12px;
+}
+.w-avatar { width:42px; height:42px; border-radius:50%; background:var(--soil3); display:flex; align-items:center; justify-content:center; font-size:22px; border:2px solid var(--border); flex-shrink:0; }
+.w-avatar.on { border-color:var(--green); }
+.w-info { flex:1; }
+.w-name { font-size:15px; font-weight:600; }
+.w-role { font-size:11px; color:var(--text2); }
+.w-stat { font-size:11px; color:var(--text2); margin-top:4px; display:flex; align-items:center; gap:5px; }
+.online-dot { width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite; }
+.offline-dot { width:6px;height:6px;border-radius:50%;background:var(--bark); }
+.busy-dot { width:6px;height:6px;border-radius:50%;background:var(--amber);animation:pulse 2s infinite; }
+
+.task-card {
+  background:var(--card); border:1px solid var(--border2); border-radius:12px;
+  padding:10px 13px; margin-bottom:6px; display:flex; gap:10px; align-items:center;
+}
+.task-icon { font-size:18px; flex-shrink:0; }
+.task-body { flex:1; }
+.task-worker { font-size:10px; color:var(--text3); font-family:'IBM Plex Mono',monospace; }
+.task-text { font-size:13px; margin-top:1px; }
+.task-done { text-decoration:line-through; color:var(--text3); }
+.task-check { font-size:18px; flex-shrink:0; }
+
+/* Alerts */
+.alert-card {
+  background:var(--card); border:1px solid var(--border2); border-radius:12px;
+  padding:10px 13px; display:flex; gap:10px; margin-bottom:6px; animation:slideIn 0.3s ease;
+}
+@keyframes slideIn { from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)} }
+.alert-card.warn { border-left:3px solid var(--amber); }
+.alert-card.danger { border-left:3px solid var(--red); }
+.alert-card.ok { border-left:3px solid var(--green); }
+.alert-card.info { border-left:3px solid var(--water); }
+.aicon { font-size:20px; flex-shrink:0; }
+.abody { flex:1; }
+.atitle { font-size:13px; font-weight:600; }
+.asub { font-size:11px; color:var(--text2); margin-top:1px; }
+.atime { font-size:10px; color:var(--text3); font-family:'IBM Plex Mono',monospace; flex-shrink:0; }
+
+/* Emergency */
+.emg-btn {
+  width:100%; padding:15px; margin:14px 0 0;
+  background:rgba(232,64,64,0.1); border:1.5px solid rgba(232,64,64,0.4);
+  border-radius:14px; color:#ff7070; font-size:14px; font-weight:700;
+  font-family:'Noto Sans Thai',sans-serif; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  transition:all 0.2s;
+}
+.emg-btn:active { background:rgba(232,64,64,0.2); transform:scale(0.99); }
+
+/* Schedule page */
+.sched-card {
+  background:var(--card); border:1px solid var(--border2); border-radius:12px;
+  padding:12px 14px; margin-bottom:7px; display:flex; align-items:center; gap:12px;
+}
+.sched-time { font-family:'IBM Plex Mono',monospace; font-size:18px; color:var(--water); width:52px; flex-shrink:0; }
+.sched-body { flex:1; }
+.sched-title { font-size:13px; font-weight:600; }
+.sched-sub { font-size:11px; color:var(--text2); margin-top:1px; }
+
+/* Worker emoji grid */
+.emoji-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; }
+.emoji-btn {
+  background:var(--soil3); border:1px solid var(--border); border-radius:10px;
+  padding:8px 4px; text-align:center; cursor:pointer; transition:all 0.2s;
+  font-size:22px; display:flex; align-items:center; justify-content:center;
+}
+.emoji-btn.selected { border-color:var(--lime); background:rgba(158,208,64,0.1); }
+
+/* Role chips */
+.role-chips { display:flex; flex-wrap:wrap; gap:6px; }
+.role-chip {
+  padding:5px 12px; border-radius:16px; border:1px solid var(--border);
+  background:transparent; font-size:12px; color:var(--text2); cursor:pointer;
+  font-family:'Noto Sans Thai',sans-serif; transition:all 0.2s;
+}
+.role-chip.selected { background:rgba(106,191,80,0.12); border-color:var(--green); color:var(--green); }
+
+/* Lang toggle */
+.lang-btn {
+  display:flex; align-items:center; gap:4px;
+  background:rgba(92,61,30,0.5); border:1px solid var(--border);
+  border-radius:20px; padding:5px 12px; cursor:pointer;
+  font-size:12px; font-weight:700; color:var(--text2);
+  transition:all 0.2s; font-family:'IBM Plex Mono',monospace;
+  letter-spacing:1px; user-select:none;
+}
+.lang-btn:active { transform:scale(0.92); }
+
+/* Toast */
+.toast {
+  position:fixed; bottom:86px; left:50%;
+  transform:translateX(-50%) translateY(16px);
+  background:linear-gradient(135deg,var(--leaf2),var(--leaf));
+  color:white; font-size:13px; font-weight:600;
+  padding:9px 20px; border-radius:22px; z-index:300;
+  opacity:0; transition:all 0.3s ease; white-space:nowrap;
+  pointer-events:none; box-shadow:0 4px 20px rgba(45,90,27,0.4);
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ===== HOME PAGE ===== -->
+<div class="page active" id="page-home">
+
+  <div class="header">
+    <div>
+      <div class="farm-label">🌿 ไร่บอส BOSS</div>
+      <div class="farm-name">ไร่ทุเรียน–องุ่น</div>
+      <div class="farm-sub">📍 22 ร่อง · ใช้งาน <span id="statActiveHeader">5</span> ร่อง</div>
+      <div id="fbStatus" style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text3);margin-top:4px;">
+        <div id="fbDot" style="width:6px;height:6px;border-radius:50%;background:var(--bark);"></div>
+        <span id="fbLabel">กำลังเชื่อมต่อ Firebase...</span>
+      </div>
+    </div>
+    <div class="weather-box">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
+        <div class="lang-btn" id="langBtn" onclick="toggleLang()">🇹🇭 TH</div>
+      </div>
+      <div class="temp">34°</div>
+      <div class="wsub" id="weatherSub">☀️ แล้ง · ลม 8 กม/ชม</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="stats-bar">
+      <div class="stat-box">
+        <span class="stat-val" id="statActive" style="color:var(--lime)">5</span>
+        <div class="stat-lbl" id="lbl-active">ร่องใช้งาน</div>
+      </div>
+      <div class="stat-box">
+        <span class="stat-val" id="statWater" style="color:var(--water)">3</span>
+        <div class="stat-lbl" id="lbl-water">💧 เปิดน้ำ</div>
+      </div>
+      <div class="stat-box">
+        <span class="stat-val" style="color:var(--text2)">22</span>
+        <div class="stat-lbl" id="lbl-total">ทั้งหมด</div>
+      </div>
+      <div class="stat-box">
+        <span class="stat-val" id="statAlert" style="color:var(--amber)">2</span>
+        <div class="stat-lbl" id="lbl-alerts">⚠️ แจ้งเตือน</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row filter -->
+  <div class="sec">
+    <div class="sec-label" id="lbl-rows">ร่องปลูก</div>
+    <div class="row-filter" id="rowFilter">
+      <div class="filter-chip on" id="fc-all" onclick="setFilter('all',this)">ใช้งาน</div>
+      
+      <div class="filter-chip" id="fc-water" onclick="setFilter('water',this)">เปิดน้ำ</div>
+      <div class="filter-chip" id="fc-dry" onclick="setFilter('dry',this)">แห้ง</div>
+      <div class="filter-chip" id="fc-inactive" onclick="setFilter('inactive',this)">➕ ร่อง 6–22</div>
+    </div>
+
+    <div class="row-list" id="rowList"></div>
+
+    <button class="add-row-btn" id="btn-addrow" onclick="openAddModal()">
+      <span>＋</span> เพิ่มร่องใหม่
+    </button>
+  </div>
+
+  <!-- Alerts -->
+  <div class="sec" style="margin-top:4px;">
+    <div class="sec-label" id="lbl-notif">การแจ้งเตือน</div>
+    <div id="alertList"></div>
+  </div>
+
+  <div class="sec">
+    <button class="emg-btn" id="btn-emg" onclick="emergencyStop()">⛔ หยุดฉุกเฉิน — ปิดน้ำทุกร่อง</button>
+  </div>
+  <div style="height:10px"></div>
+</div>
+
+<!-- ===== COMMAND PAGE ===== -->
+<div class="page" id="page-command">
+  <div class="header">
+    <div>
+      <div class="farm-label">📡 <span id="lbl-cmd-page">สั่งงาน</span></div>
+      <div class="farm-name" id="lbl-cmd-title">Command Center</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label" id="lbl-selectworker">เลือกลูกน้อง</div>
+    <div class="worker-chips" id="wchips"></div>
+  </div>
+
+  <div class="sec" style="margin-top:12px;">
+    <div class="chat-box">
+      <div class="chat-top">
+        <div>
+          <div class="chat-to-name" id="chatName">สมชาย 👨‍🌾</div>
+          <div class="chat-to-status"><div class="online-dot"></div> <span id="chatStatus">กำลังรดน้ำ</span></div>
+        </div>
+        <div style="font-size:11px;color:var(--text3);font-family:'IBM Plex Mono',monospace;" id="chatZone">ร่อง A–B</div>
+      </div>
+      <div class="chat-area" id="chatArea"></div>
+      <div class="quick-bar">
+        <div class="qchip" onclick="sendQuick('รดน้ำโซนที่รับผิดชอบด้วยนะ')">💧 รดน้ำ</div>
+        <div class="qchip" onclick="sendQuick('ตัดแต่งกิ่งตามแผน')">✂️ ตัดกิ่ง</div>
+        <div class="qchip" onclick="sendQuick('ตรวจโรงเรือน รายงานผลด้วย')">🔍 ตรวจโรงเรือน</div>
+        <div class="qchip" onclick="sendQuick('ใส่ปุ๋ยตามโปรแกรม')">🌱 ใส่ปุ๋ย</div>
+        <div class="qchip" onclick="sendQuick('ถ่ายรูปส่งมาด้วย')">📸 ถ่ายรูป</div>
+        <div class="qchip" onclick="sendQuick('มาประชุมที่โรงเรือนหลัก 10 นาที')">📢 ประชุม</div>
+      </div>
+      <div class="input-bar">
+        <textarea class="msg-input" id="msgInput" placeholder="พิมพ์คำสั่ง..." rows="1"
+          oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,90)+'px'"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"></textarea>
+        <button class="send-btn" onclick="sendMsg()">➤</button>
+      </div>
+    </div>
+
+    <!-- Broadcast -->
+    <div class="broadcast-box">
+      <div class="broadcast-title" id="lbl-broadcast">📢 ประกาศทีมทั้งหมด</div>
+      <input class="broadcast-input" id="broadInput" placeholder="ข้อความถึงทุกคน..." />
+      <button class="broadcast-btn" id="btn-broadcast" onclick="sendBroadcast()">📣 ส่งหาทุกคน (4 คน)</button>
+    </div>
+  </div>
+  <div style="height:10px"></div>
+</div>
+
+<!-- ===== WORKERS PAGE ===== -->
+<div class="page" id="page-workers">
+  <div class="header">
+    <div>
+      <div class="farm-label">👷 <span id="lbl-workers-page">คนงาน</span></div>
+      <div class="farm-name" id="lbl-workers-title">Workers</div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec-label" id="lbl-todaystatus">สถานะวันนี้</div>
+    <div id="workerList"></div>
+  </div>
+  <div class="sec" style="margin-top:4px;">
+    <div class="sec-label" id="lbl-tasks">งานที่มอบหมาย</div>
+    <div id="taskList"></div>
+  </div>
+
+  <div class="sec" style="margin-top:4px;">
+    <button class="add-row-btn" id="btn-addworker" onclick="openAddWorkerModal()">
+      <span>＋</span> เพิ่มคนงานใหม่
+    </button>
+  </div>
+  <div style="height:10px"></div>
+</div>
+
+<!-- ===== SCHEDULE PAGE ===== -->
+<div class="page" id="page-schedule">
+  <div class="header">
+    <div>
+      <div class="farm-label">⏰ <span id="lbl-sched-page">ตาราง</span></div>
+      <div class="farm-name" id="lbl-sched-title">Schedule</div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec-label" id="lbl-autowater">รดน้ำอัตโนมัติ</div>
+    <div id="schedList"></div>
+  </div>
+  <div class="sec" style="margin-top:4px;">
+    <div class="sec-label" id="lbl-calendar">ปฏิทินสัปดาห์นี้</div>
+    <div id="weekCal"></div>
+  </div>
+  <div style="height:10px"></div>
+</div>
+
+</div><!-- .app -->
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <div class="nav-btn active" onclick="nav('home',this)"><span class="ni">🏡</span><span class="nl" id="nav-home">ภาพรวม</span></div>
+  <div class="nav-btn" onclick="nav('command',this)"><span class="ni">📡</span><span class="nl" id="nav-cmd">สั่งงาน</span></div>
+  <div class="nav-btn" onclick="nav('workers',this)"><span class="ni">👷</span><span class="nl" id="nav-work">คนงาน</span></div>
+  <div class="nav-btn" onclick="nav('schedule',this)"><span class="ni">⏰</span><span class="nl" id="nav-sched">ตาราง</span></div>
+</div>
+
+<!-- ADD/EDIT ROW MODAL -->
+<div class="modal-overlay" id="rowModal" onclick="closeModalOutside(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modalTitle">➕ เพิ่มร่องใหม่</div>
+    <div class="modal-body">
+
+      <div class="form-group">
+        <label class="form-label">ชื่อร่อง / โซน</label>
+        <input class="form-input" id="f-name" placeholder="เช่น ร่องทุเรียน A, โซนองุ่น 1" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">พืชที่ปลูก</label>
+        <div class="crop-grid" id="cropGrid"></div>
+      </div>
+
+      <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div>
+          <label class="form-label">ความยาวร่อง</label>
+          <input class="form-input" id="f-length" placeholder="เช่น 80m" />
+        </div>
+        <div>
+          <label class="form-label">จำนวนต้น</label>
+          <input class="form-input" id="f-trees" placeholder="เช่น 24" type="number" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">ตำแหน่ง / โรงเรือน</label>
+        <select class="form-input" id="f-zone">
+          <option value="โรงเรือน 1">โรงเรือน 1</option>
+          <option value="โรงเรือน 2">โรงเรือน 2</option>
+          <option value="โรงเรือน 3">โรงเรือน 3</option>
+          <option value="โรงเรือน 4">โรงเรือน 4</option>
+          <option value="โรงเรือน 5">โรงเรือน 5</option>
+          <option value="กลางแจ้ง">กลางแจ้ง</option>
+          <option value="แปลงเปล่า">แปลงเปล่า</option>
+        </select>
+      </div>
+
+    </div>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+
+<!-- WORKER MODAL -->
+<div class="modal-overlay" id="workerModal" onclick="closeWorkerModalOutside(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="workerModalTitle">➕ เพิ่มคนงานใหม่</div>
+    <div class="modal-body">
+
+      <div class="form-group">
+        <label class="form-label">ชื่อ</label>
+        <input class="form-input" id="wf-name" placeholder="เช่น สมชาย, แดง, มาลี" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">ตำแหน่ง</label>
+        <div class="role-chips" id="roleChips"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">โซนรับผิดชอบ</label>
+        <input class="form-input" id="wf-zone" placeholder="เช่น ร่อง A–B, โรงเรือน 1" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">ไอคอน</label>
+        <div class="emoji-grid" id="emojiGrid"></div>
+      </div>
+
+    </div>
+    <div class="modal-actions" id="workerModalActions"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== STATE =====
+const CROPS = [
+  { id:'durian', emoji:'🌵', name:'ทุเรียน', color:'#d4b04a' },
+  { id:'grape',  emoji:'🍇', name:'องุ่น',   color:'#8b6fc0' },
+  { id:'melon',  emoji:'🍈', name:'เมล่อน',  color:'#f5a623' },
+  { id:'bitter', emoji:'🥒', name:'มะระจีน', color:'#4caf50' },
+  { id:'mango',  emoji:'🥭', name:'มะม่วง',  color:'#ff7043' },
+  { id:'lime',   emoji:'🍋', name:'มะนาว',   color:'#c6d84a' },
+  { id:'banana', emoji:'🍌', name:'กล้วย',   color:'#ffe135' },
+  { id:'empty',  emoji:'⬜', name:'ว่าง',    color:'#5c3d1e' },
+];
+
+let rows = [
+  { id:1, num:1,  name:'ร่องทุเรียน A', crop:'durian', zone:'โรงเรือน 1', length:'80m', trees:24, moisture:38, waterOn:true,  active:true },
+  { id:2, num:2,  name:'ร่ององุ่น B',   crop:'grape',  zone:'โรงเรือน 2', length:'100m',trees:32, moisture:55, waterOn:true,  active:true },
+  { id:3, num:3,  name:'ร่องเมล่อน C',  crop:'melon',  zone:'โรงเรือน 3', length:'60m', trees:20, moisture:62, waterOn:true,  active:true },
+  { id:4, num:4,  name:'ร่องมะระจีน D', crop:'bitter', zone:'กลางแจ้ง',   length:'50m', trees:40, moisture:72, waterOn:false, active:true },
+  { id:5, num:5,  name:'ร่ององุ่น E',   crop:'grape',  zone:'โรงเรือน 2', length:'100m',trees:30, moisture:48, waterOn:false, active:true },
+  // Rows 6-22: inactive/empty
+  ...Array.from({length:17},(_,i)=>({
+    id:i+6, num:i+6, name:`ร่องที่ ${i+6}`, crop:'empty', zone:'แปลงเปล่า',
+    length:'—', trees:0, moisture:0, waterOn:false, active:false
+  }))
+];
+
+let rowIdCounter = 23;
+
+const workers = [
+  { id:1, name:'สมชาย', role:'หัวหน้างาน', emoji:'👨‍🌾', online:true,  zone:'ร่อง A–B', status:'กำลังรดน้ำ',  statusType:'busy' },
+  { id:2, name:'แดง',   role:'คนงาน',      emoji:'👷',   online:true,  zone:'ร่อง C',   status:'ตัดแต่งกิ่ง', statusType:'busy' },
+  { id:3, name:'มาลี',  role:'คนงาน',      emoji:'👩‍🌾', online:true,  zone:'โรงเรือน 2',status:'ออนไลน์',    statusType:'online' },
+  { id:4, name:'ตุ้ย',  role:'คนงาน',      emoji:'🧑‍🌾', online:false, zone:'—',          status:'ออฟไลน์',   statusType:'offline' },
+];
+
+const tasks = [
+  { worker:'สมชาย', text:'รดน้ำร่อง A และ B ตอนเช้า', done:true },
+  { worker:'แดง',   text:'ตัดแต่งกิ่งองุ่นโรงเรือน 2',  done:false },
+  { worker:'มาลี',  text:'ตรวจโรงเรือน 3 เมล่อน',      done:true },
+  { worker:'ตุ้ย',  text:'ใส่ปุ๋ยมะระแปลง D',           done:false },
+];
+
+const schedules = [
+  { time:'06:00', title:'รดน้ำเช้า',      detail:'ทุเรียน A + องุ่น B', on:true },
+  { time:'11:30', title:'รดน้ำกลางวัน',  detail:'เมล่อน C · 15 นาที',  on:true },
+  { time:'17:00', title:'รดน้ำเย็น',      detail:'ทุกร่อง · 20 นาที',   on:false },
+];
+
+const alertItems = [
+  { type:'warn',  icon:'⚠️', title:'ความชื้นต่ำ — ร่องทุเรียน A', sub:'ความชื้นดิน 38% ควรรดน้ำเพิ่ม', time:'11:20' },
+  { type:'info',  icon:'💧', title:'รดน้ำเมล่อน C เสร็จ', sub:'สมชาย รายงาน · ใช้น้ำ 180L', time:'10:45' },
+  { type:'ok',    icon:'✅', title:'ตรวจโรงเรือน 1 เรียบร้อย', sub:'แดง · ไม่พบปัญหา', time:'09:30' },
+];
+
+const chatHistory = {
+  1: [
+    { from:'boss', text:'สมชาย ช่วยดูระดับน้ำร่อง A ด้วยนะ', time:'10:28' },
+    { from:'worker', name:'สมชาย', text:'ครับผม รับทราบแล้วครับ', time:'10:30' },
+  ],
+  2: [{ from:'worker', name:'แดง', text:'โอเค ทำให้แล้วครับ 👍', time:'09:45' }],
+  3: [], 4: [],
+};
+
+let activeWorker = workers[0];
+let currentFilter = 'all';
+let editingRowId = null;
+let selectedCrop = 'durian';
+
+// ===== HELPERS =====
+function getCrop(id) { return CROPS.find(c=>c.id===id)||CROPS[CROPS.length-1]; }
+
+function getMoistureBadge(r) {
+  if (!r.active) return `<span class="moisture-badge idle">ว่าง</span>`;
+  if (r.moisture < 40) return `<span class="moisture-badge dry">💧${r.moisture}%</span>`;
+  if (r.moisture < 60) return `<span class="moisture-badge warn">💧${r.moisture}%</span>`;
+  return `<span class="moisture-badge ok">💧${r.moisture}%</span>`;
+}
+
+// ===== RENDER ROWS =====
+function getFilteredRows() {
+  switch(currentFilter) {
+    case 'active':   return rows.filter(r=>r.active);
+    case 'water':    return rows.filter(r=>r.waterOn);
+    case 'dry':      return rows.filter(r=>r.active && r.moisture<50);
+    case 'inactive': return rows.filter(r=>!r.active);
+    default:         return rows.filter(r=>r.active); // ซ่อนร่องว่าง 6-22
+  }
+}
+
+function renderRows() {
+  const list = getFilteredRows();
+  const activeCount = rows.filter(r=>r.active).length;
+  const waterCount = rows.filter(r=>r.waterOn).length;
+  document.getElementById('statActive').textContent = activeCount;
+  document.getElementById('statWater').textContent = waterCount;
+
+  document.getElementById('rowList').innerHTML = list.map(r => {
+    const crop = getCrop(r.crop);
+    return `
+    <div class="row-item ${r.waterOn?'water-on':''} ${!r.active?'inactive':''}"
+         style="--rc:${crop.color}"
+         onclick="openEditModal(${r.id})">
+      <div class="row-num">${r.num}</div>
+      <div class="row-emoji">${crop.emoji}</div>
+      <div class="row-info">
+        <div class="row-name">${r.name}</div>
+        <div class="row-detail">${crop.name} · ${r.trees>0?r.trees+' ต้น':''} ${r.length!=='—'?'· '+r.length:''}</div>
+        <div class="row-zone">📍 ${r.zone}</div>
+        ${r.active&&r.waterOn?`<div class="flow-dots" style="margin-top:4px"><div class="fdot"></div><div class="fdot"></div><div class="fdot"></div><span style="font-size:10px;color:var(--water);margin-left:2px">${T('rowWatering')}</span></div>`:''}
+      </div>
+      <div class="row-right">
+        <div class="mini-toggle ${r.waterOn&&r.active?'on':''}"
+             onclick="event.stopPropagation();toggleWater(${r.id})">
+        </div>
+        ${getMoistureBadge(r)}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===== FILTER =====
+function setFilter(f, el) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+  renderRows();
+}
+
+// ===== WATER TOGGLE =====
+function toggleWater(id) {
+  const r = rows.find(x=>x.id===id);
+  if (!r.active) return showToast('⚠️ ร่องนี้ยังไม่ได้เปิดใช้งาน');
+  r.waterOn = !r.waterOn;
+  renderRows();
+  showToast(r.waterOn ? `💧 เปิดน้ำ ${r.name}` : `🔴 ปิดน้ำ ${r.name}`);
+}
+
+function emergencyStop() {
+  rows.forEach(r=>r.waterOn=false);
+  renderRows();
+  showToast('⛔ ปิดน้ำทุกร่องแล้ว');
+}
+
+// ===== MODAL =====
+function buildCropGrid(selected) {
+  document.getElementById('cropGrid').innerHTML = CROPS.map(c=>`
+    <div class="crop-btn ${c.id===selected?'selected':''}" onclick="selectCrop('${c.id}')">
+      <span>${c.emoji}</span>
+      <small>${c.name}</small>
+    </div>
+  `).join('');
+}
+
+function selectCrop(id) {
+  selectedCrop = id;
+  buildCropGrid(id);
+}
+
+function openAddModal() {
+  editingRowId = null;
+  selectedCrop = 'empty';
+  document.getElementById('modalTitle').textContent = '➕ เพิ่มร่องใหม่';
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-length').value = '';
+  document.getElementById('f-trees').value = '';
+  document.getElementById('f-zone').value = 'แปลงเปล่า';
+  buildCropGrid('empty');
+  document.getElementById('modalActions').innerHTML = `
+    <button class="btn-cancel" onclick="closeModal()">ยกเลิก</button>
+    <button class="btn-save" onclick="saveRow()">✅ บันทึกร่อง</button>
+  `;
+  document.getElementById('rowModal').classList.add('open');
+}
+
+function openEditModal(id) {
+  const r = rows.find(x=>x.id===id);
+  editingRowId = id;
+  selectedCrop = r.crop;
+  document.getElementById('modalTitle').textContent = `✏️ แก้ไข ${r.name}`;
+  document.getElementById('f-name').value = r.name;
+  document.getElementById('f-length').value = r.length;
+  document.getElementById('f-trees').value = r.trees||'';
+  document.getElementById('f-zone').value = r.zone;
+  buildCropGrid(r.crop);
+  document.getElementById('modalActions').innerHTML = `
+    <button class="btn-delete" onclick="deleteRow(${id})">🗑</button>
+    <button class="btn-cancel" onclick="closeModal()">ยกเลิก</button>
+    <button class="btn-save" onclick="saveRow()">✅ บันทึก</button>
+  `;
+  document.getElementById('rowModal').classList.add('open');
+}
+
+function closeModal() { document.getElementById('rowModal').classList.remove('open'); }
+function closeModalOutside(e) { if(e.target.id==='rowModal') closeModal(); }
+
+function saveRow() {
+  const name = document.getElementById('f-name').value.trim();
+  const length = document.getElementById('f-length').value.trim() || '—';
+  const trees = parseInt(document.getElementById('f-trees').value)||0;
+  const zone = document.getElementById('f-zone').value;
+  const crop = selectedCrop;
+
+  if (!name) { showToast('⚠️ กรุณาใส่ชื่อร่อง'); return; }
+
+  if (editingRowId) {
+    const r = rows.find(x=>x.id===editingRowId);
+    Object.assign(r, { name, crop, length, trees, zone, active: crop!=='empty' });
+    showToast(`✅ แก้ไข ${name} แล้ว`);
+  } else {
+    // Find first inactive slot or add new
+    const slot = rows.find(r=>!r.active);
+    if (slot) {
+      Object.assign(slot, { name, crop, length, trees, zone, moisture: 50, waterOn:false, active: crop!=='empty' });
+    } else {
+      rows.push({ id:rowIdCounter++, num:rows.length+1, name, crop, zone, length, trees, moisture:50, waterOn:false, active: crop!=='empty' });
+    }
+    showToast(`✅ เพิ่ม ${name} แล้ว`);
+  }
+
+  closeModal();
+  renderRows();
+}
+
+function deleteRow(id) {
+  const r = rows.find(x=>x.id===id);
+  r.active = false;
+  r.crop = 'empty';
+  r.waterOn = false;
+  r.name = `ร่องที่ ${r.num}`;
+  r.zone = 'แปลงเปล่า';
+  r.length = '—';
+  r.trees = 0;
+  closeModal();
+  renderRows();
+  showToast('🗑 ลบร่องแล้ว');
+}
+
+// ===== CHAT =====
+function renderWorkerChips() {
+  document.getElementById('wchips').innerHTML = workers.map(w=>`
+    <div class="wchip ${w.id===activeWorker.id?'active':''}" onclick="selectWorker(${w.id})">
+      ${w.online?'<div class="wchip-dot"></div>':''}
+      ${w.emoji} ${w.name}
+    </div>
+  `).join('');
+}
+
+function renderChat() {
+  document.getElementById('chatName').textContent = `${activeWorker.name} ${activeWorker.emoji}`;
+  document.getElementById('chatStatus').textContent = activeWorker.status;
+  document.getElementById('chatZone').textContent = activeWorker.zone;
+
+  const msgs = [...(chatHistory[activeWorker.id]||[])].reverse();
+  const area = document.getElementById('chatArea');
+
+  if (!msgs.length) {
+    area.innerHTML = `<div style="text-align:center;color:var(--text3);font-size:12px;padding:20px 0">เริ่มสนทนากับ ${activeWorker.name}</div>`;
+    return;
+  }
+
+  area.innerHTML = msgs.map(m=>`
+    <div class="msg ${m.from==='boss'?'boss':'worker'}">
+      ${m.from==='worker'?`<div class="msg-from">${m.name}</div>`:''}
+      <div class="bubble">${m.text}</div>
+      <div class="msg-meta">${m.time}</div>
+    </div>
+  `).join('');
+  area.scrollTop = area.scrollHeight;
+}
+
+function selectWorker(id) {
+  activeWorker = workers.find(w=>w.id===id);
+  renderWorkerChips();
+  renderChat();
+}
+
+function now() {
+  const d=new Date();
+  return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+function sendMsg() {
+  const el = document.getElementById('msgInput');
+  const text = el.value.trim();
+  if (!text) return;
+  if (!chatHistory[activeWorker.id]) chatHistory[activeWorker.id]=[];
+  chatHistory[activeWorker.id].push({ from:'boss', text, time:now() });
+  el.value=''; el.style.height='auto';
+  renderChat();
+
+  if (activeWorker.online) {
+    setTimeout(()=>{
+      const area = document.getElementById('chatArea');
+      const t = document.createElement('div');
+      t.className='msg worker typing-wrap';
+      t.innerHTML='<div class="typing-dots"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div>';
+      area.appendChild(t); area.scrollTop=area.scrollHeight;
+
+      const replies = ['รับทราบครับ 👍','โอเคครับ จะทำให้เลย','ครับผม เข้าใจแล้ว','โอเคค่ะ รับคำสั่งแล้ว'];
+      setTimeout(()=>{
+        t.remove();
+        chatHistory[activeWorker.id].push({ from:'worker', name:activeWorker.name, text:replies[~~(Math.random()*replies.length)], time:now() });
+        renderChat();
+      }, 1200+Math.random()*800);
+    }, 600);
+  }
+}
+
+function sendQuick(text) { document.getElementById('msgInput').value=text; sendMsg(); }
+
+function sendBroadcast() {
+  const t = document.getElementById('broadInput').value.trim();
+  if (!t) return;
+  workers.filter(w=>w.online).forEach(w=>{
+    if (!chatHistory[w.id]) chatHistory[w.id]=[];
+    chatHistory[w.id].push({ from:'boss', text:`[ประกาศ] ${t}`, time:now() });
+  });
+  document.getElementById('broadInput').value='';
+  renderChat();
+  showToast(`📣 ส่งถึง ${workers.filter(w=>w.online).length} คนแล้ว`);
+}
+
+// ===== WORKERS PAGE =====
+function renderWorkers() {
+  document.getElementById('workerList').innerHTML = workers.map(w=>`
+    <div class="worker-full-card">
+      <div class="w-avatar ${w.online?'on':''}">${w.emoji}</div>
+      <div class="w-info">
+        <div class="w-name">${w.name}</div>
+        <div class="w-role">${w.role}</div>
+        <div class="w-stat">
+          <div class="${w.statusType}-dot"></div>
+          ${w.status} · ${w.zone}
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end">
+        <button style="background:rgba(106,191,80,0.1);border:1px solid rgba(106,191,80,0.2);border-radius:10px;padding:5px 11px;color:var(--green);font-size:12px;cursor:pointer;font-family:'Noto Sans Thai',sans-serif;"
+          onclick="quickChat(${w.id})">💬 ${T('cmdBtn').replace('💬 ','')}</button>
+        <button style="background:transparent;border:1px solid var(--border2);border-radius:10px;padding:5px 11px;color:var(--text3);font-size:12px;cursor:pointer;font-family:'Noto Sans Thai',sans-serif;"
+          onclick="openEditWorkerModal(${w.id})">✏️ ${T('editBtn').replace('✏️ ','')}</button>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('taskList').innerHTML = tasks.map(t=>`
+    <div class="task-card">
+      <span class="task-icon">${t.done?'✅':'⏳'}</span>
+      <div class="task-body">
+        <div class="task-worker">${t.worker}</div>
+        <div class="task-text ${t.done?'task-done':''}">${t.text}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function quickChat(id) {
+  activeWorker = workers.find(w=>w.id===id);
+  nav('command', document.querySelectorAll('.nav-btn')[1]);
+  renderWorkerChips();
+  renderChat();
+}
+
+// ===== WORKER MODAL =====
+const WORKER_EMOJIS = ['👨‍🌾','👩‍🌾','👷','🧑‍🌾','👨‍🔧','👩‍🔧','🧑‍🔧','👨‍💼','👩‍💼','🧑'];
+const WORKER_ROLES = ['หัวหน้างาน','คนงาน','ช่างซ่อม','คนขับรถ','ผู้ช่วย'];
+let editingWorkerId = null;
+let selectedWorkerEmoji = '👷';
+let selectedWorkerRole = 'คนงาน';
+let workerIdCounter = 10;
+
+function buildEmojiGrid(selected) {
+  document.getElementById('emojiGrid').innerHTML = WORKER_EMOJIS.map(e=>`
+    <div class="emoji-btn ${e===selected?'selected':''}" onclick="selectWEmoji('${e}')">${e}</div>
+  `).join('');
+}
+
+function buildRoleChips(selected) {
+  document.getElementById('roleChips').innerHTML = WORKER_ROLES.map(r=>`
+    <div class="role-chip ${r===selected?'selected':''}" onclick="selectWRole('${r}')">${r}</div>
+  `).join('');
+}
+
+function selectWEmoji(e) { selectedWorkerEmoji=e; buildEmojiGrid(e); }
+function selectWRole(r) { selectedWorkerRole=r; buildRoleChips(r); }
+
+function openAddWorkerModal() {
+  editingWorkerId = null;
+  selectedWorkerEmoji = '👷';
+  selectedWorkerRole = 'คนงาน';
+  document.getElementById('workerModalTitle').textContent = '➕ เพิ่มคนงานใหม่';
+  document.getElementById('wf-name').value = '';
+  document.getElementById('wf-zone').value = '';
+  buildEmojiGrid(selectedWorkerEmoji);
+  buildRoleChips(selectedWorkerRole);
+  document.getElementById('workerModalActions').innerHTML = `
+    <button class="btn-cancel" onclick="closeWorkerModal()">ยกเลิก</button>
+    <button class="btn-save" onclick="saveWorker()">✅ บันทึก</button>
+  `;
+  document.getElementById('workerModal').classList.add('open');
+}
+
+function openEditWorkerModal(id) {
+  const w = workers.find(x=>x.id===id);
+  editingWorkerId = id;
+  selectedWorkerEmoji = w.emoji;
+  selectedWorkerRole = w.role;
+  document.getElementById('workerModalTitle').textContent = `✏️ แก้ไข ${w.name}`;
+  document.getElementById('wf-name').value = w.name;
+  document.getElementById('wf-zone').value = w.zone;
+  buildEmojiGrid(w.emoji);
+  buildRoleChips(w.role);
+  document.getElementById('workerModalActions').innerHTML = `
+    <button class="btn-delete" onclick="deleteWorker(${id})">🗑</button>
+    <button class="btn-cancel" onclick="closeWorkerModal()">ยกเลิก</button>
+    <button class="btn-save" onclick="saveWorker()">✅ บันทึก</button>
+  `;
+  document.getElementById('workerModal').classList.add('open');
+}
+
+function saveWorker() {
+  const name = document.getElementById('wf-name').value.trim();
+  const zone = document.getElementById('wf-zone').value.trim() || '—';
+  if (!name) { showToast('⚠️ กรุณาใส่ชื่อ'); return; }
+
+  if (editingWorkerId) {
+    const w = workers.find(x=>x.id===editingWorkerId);
+    w.name = name;
+    w.role = selectedWorkerRole;
+    w.emoji = selectedWorkerEmoji;
+    w.zone = zone;
+    // update chatHistory key name stays same (uses id)
+    // update activeWorker if same
+    if (activeWorker.id === editingWorkerId) activeWorker = w;
+    showToast(`✅ แก้ไข ${name} แล้ว`);
+  } else {
+    const newW = {
+      id: workerIdCounter++,
+      name, role: selectedWorkerRole, emoji: selectedWorkerEmoji,
+      online: false, zone, status: 'ออฟไลน์', statusType: 'offline'
+    };
+    workers.push(newW);
+    chatHistory[newW.id] = [];
+    showToast(`✅ เพิ่ม ${name} แล้ว`);
+  }
+
+  closeWorkerModal();
+  renderWorkers();
+  renderWorkerChips();
+}
+
+function deleteWorker(id) {
+  const idx = workers.findIndex(x=>x.id===id);
+  const name = workers[idx].name;
+  workers.splice(idx, 1);
+  if (activeWorker.id === id) activeWorker = workers[0];
+  closeWorkerModal();
+  renderWorkers();
+  renderWorkerChips();
+  renderChat();
+  showToast(`🗑 ลบ ${name} ออกแล้ว`);
+}
+
+function closeWorkerModal() { document.getElementById('workerModal').classList.remove('open'); }
+function closeWorkerModalOutside(e) { if(e.target.id==='workerModal') closeWorkerModal(); }
+
+// ===== SCHEDULE =====
+function renderSchedule() {
+  document.getElementById('schedList').innerHTML = schedules.map((s,i)=>`
+    <div class="sched-card">
+      <div class="sched-time">${s.time}</div>
+      <div class="sched-body">
+        <div class="sched-title">${s.title}</div>
+        <div class="sched-sub">${s.detail}</div>
+      </div>
+      <div class="mini-toggle ${s.on?'on':''}" onclick="toggleSched(${i})"></div>
+    </div>
+  `).join('');
+
+  const days = T('days');
+  const today=(new Date().getDay()+6)%7;
+  document.getElementById('weekCal').innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:10px;">
+      ${days.map((d,i)=>`
+        <div style="text-align:center;">
+          <div style="font-size:9px;color:var(--text3);margin-bottom:4px;">${d}</div>
+          <div style="width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:12px;font-family:'IBM Plex Mono',monospace;
+            background:${i===today?'var(--leaf2)':'var(--card)'};border:1px solid ${i===today?'var(--green)':'var(--border2)'};color:${i===today?'white':'var(--text)'}">${i+1}</div>
+        </div>`).join('')}
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:11px 13px;font-size:12px;color:var(--text2);">
+      ${T('calToday')}
+    </div>
+  `;
+}
+
+function toggleSched(i) {
+  schedules[i].on = !schedules[i].on;
+  renderSchedule();
+  showToast(schedules[i].on ? `⏰ เปิดตาราง ${schedules[i].time}` : `🔕 ปิดตาราง ${schedules[i].time}`);
+}
+
+// ===== ALERTS =====
+function renderAlerts() {
+  document.getElementById('alertList').innerHTML = alertItems.map(a=>`
+    <div class="alert-card ${a.type}">
+      <span class="aicon">${a.icon}</span>
+      <div class="abody">
+        <div class="atitle">${a.title}</div>
+        <div class="asub">${a.sub}</div>
+      </div>
+      <div class="atime">${a.time}</div>
+    </div>
+  `).join('');
+}
+
+// ===== NAV =====
+function nav(name, btn) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  btn.classList.add('active');
+  if (name==='command') { renderWorkerChips(); renderChat(); }
+  if (name==='workers') renderWorkers();
+  if (name==='schedule') renderSchedule();
+}
+
+// ===== TOAST =====
+let tt;
+function showToast(msg) {
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  clearTimeout(tt); tt=setTimeout(()=>el.classList.remove('show'),2500);
+}
+
+// ===== FIREBASE SETUP =====
+const firebaseConfig = {
+  apiKey: "AIzaSyBIIYPrQRANtaItyMqAK_CAjt5qBdhBdC0",
+  authDomain: "the-green-app-2458d.firebaseapp.com",
+  databaseURL: "https://the-green-app-2458d-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "the-green-app-2458d",
+  storageBucket: "the-green-app-2458d.firebasestorage.app",
+  messagingSenderId: "977273780332",
+  appId: "1:977273780332:web:3bf0adde644f3325888049",
+  measurementId: "G-RQZ8YR90FG"
+};
+
+let db = null;
+let fbConnected = false;
+
+function setFbStatus(connected) {
+  fbConnected = connected;
+  const dot = document.getElementById('fbDot');
+  const label = document.getElementById('fbLabel');
+  if (connected) {
+    dot.style.background = 'var(--green)';
+    dot.style.animation = 'pulse 2s infinite';
+    label.style.color = 'var(--green)';
+    label.textContent = '🔥 Firebase เชื่อมต่อแล้ว (Live)';
+  } else {
+    dot.style.background = 'var(--amber)';
+    label.style.color = 'var(--amber)';
+    label.textContent = '⚠️ ออฟไลน์ — ทำงานแบบ demo';
+  }
+}
+
+async function initFirebase() {
+  try {
+    // SDK โหลดจาก <head> แล้ว — init ได้เลย
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    db = firebase.database();
+
+    // ตรวจสอบการเชื่อมต่อ
+    db.ref('.info/connected').on('value', snap => {
+      setFbStatus(snap.val() === true);
+    });
+
+    // ===== INIT FIREBASE DATA (first time) =====
+    db.ref('farm/rows').once('value', snap => {
+      if (!snap.exists()) {
+        const fbRows = {};
+        rows.filter(r => r.active).forEach(r => {
+          fbRows[`row_${r.id}`] = {
+            id: r.id, name: r.name, crop: r.crop, zone: r.zone,
+            length: r.length, trees: r.trees,
+            moisture: r.moisture, waterOn: r.waterOn,
+            active: r.active,
+            autoWater: true,
+            moistureMin: 50,
+            moistureMax: 75,
+            lastUpdated: Date.now()
+          };
+        });
+        db.ref('farm/rows').set(fbRows);
+      }
+    });
+
+    // ===== LISTEN: rows realtime =====
+    db.ref('farm/rows').on('value', snap => {
+      if (!snap.exists()) return;
+      const data = snap.val();
+      Object.values(data).forEach(fbRow => {
+        const local = rows.find(r => r.id === fbRow.id);
+        if (local) {
+          local.moisture = fbRow.moisture ?? local.moisture;
+          local.waterOn  = fbRow.waterOn ?? local.waterOn;
+          local.autoWater = fbRow.autoWater ?? true;
+          local.moistureMin = fbRow.moistureMin ?? 50;
+          local.moistureMax = fbRow.moistureMax ?? 75;
+        }
+      });
+      renderRows();
+      checkAutoWater();
+    });
+
+    // ===== LISTEN: alerts realtime =====
+    db.ref('farm/alerts').limitToLast(10).on('value', snap => {
+      if (!snap.exists()) return;
+      const data = snap.val();
+      const fbAlerts = Object.values(data).reverse();
+      alertItems.splice(0, alertItems.length, ...fbAlerts);
+      renderAlerts();
+      document.getElementById('statAlert').textContent = alertItems.filter(a=>a.type==='warn'||a.type==='danger').length;
+    });
+
+    // ===== LISTEN: chat realtime =====
+    workers.forEach(w => {
+      db.ref(`farm/chat/worker_${w.id}`).limitToLast(30).on('value', snap => {
+        if (!snap.exists()) return;
+        chatHistory[w.id] = Object.values(snap.val());
+        if (activeWorker.id === w.id) renderChat();
+      });
+    });
+
+    showToast('🔥 เชื่อมต่อ Firebase สำเร็จ!');
+
+  } catch(e) {
+    console.error('Firebase error:', e);
+    setFbStatus(false);
+    startLocalSim();
+  }
+}
+
+// ===== FIREBASE WRITE: toggle water =====
+function fbToggleWater(rowId, value) {
+  if (!db) return;
+  db.ref(`farm/rows/row_${rowId}/waterOn`).set(value);
+  db.ref(`farm/rows/row_${rowId}/lastUpdated`).set(Date.now());
+  // Log to history
+  const r = rows.find(x => x.id === rowId);
+  db.ref('farm/waterHistory').push({
+    rowId, rowName: r?.name, action: value ? 'open' : 'close',
+    timestamp: Date.now(), timeStr: now()
+  });
+  // Push alert
+  pushAlert({
+    type: value ? 'info' : 'ok',
+    icon: value ? '💧' : '🔴',
+    title: `${value ? 'เปิด' : 'ปิด'}น้ำ — ${r?.name}`,
+    sub: `สั่งจากแอป Boss`,
+    time: now()
+  });
+}
+
+// ===== FIREBASE WRITE: send chat =====
+function fbSendChat(workerId, msg) {
+  if (!db) return;
+  db.ref(`farm/chat/worker_${workerId}`).push(msg);
+}
+
+// ===== FIREBASE WRITE: push alert =====
+function pushAlert(alert) {
+  if (db) {
+    db.ref('farm/alerts').push(alert);
+  } else {
+    alertItems.unshift(alert);
+    if (alertItems.length > 10) alertItems.pop();
+    renderAlerts();
+  }
+}
+
+// ===== AUTO WATER: check threshold =====
+function checkAutoWater() {
+  rows.filter(r => r.active && r.autoWater).forEach(r => {
+    // ถ้าความชื้นต่ำกว่า min และน้ำปิดอยู่ → เปิดอัตโนมัติ
+    if (r.moisture < (r.moistureMin || 50) && !r.waterOn) {
+      r.waterOn = true;
+      if (db) db.ref(`farm/rows/row_${r.id}/waterOn`).set(true);
+      pushAlert({
+        type: 'warn', icon: '🤖',
+        title: `Auto-Water เปิดน้ำ — ${r.name}`,
+        sub: `ความชื้น ${r.moisture}% ต่ำกว่า ${r.moistureMin}%`,
+        time: now()
+      });
+      showToast(`🤖 Auto: เปิดน้ำ ${r.name} (${r.moisture}%)`);
+    }
+    // ถ้าความชื้นถึง max และน้ำเปิดอยู่ → ปิดอัตโนมัติ
+    if (r.moisture >= (r.moistureMax || 75) && r.waterOn) {
+      r.waterOn = false;
+      if (db) db.ref(`farm/rows/row_${r.id}/waterOn`).set(false);
+      pushAlert({
+        type: 'ok', icon: '✅',
+        title: `Auto-Water ปิดน้ำ — ${r.name}`,
+        sub: `ความชื้น ${r.moisture}% ถึง ${r.moistureMax}% แล้ว`,
+        time: now()
+      });
+    }
+  });
+  renderRows();
+}
+
+// ===== OVERRIDE toggleWater to use Firebase =====
+function toggleWater(id) {
+  const r = rows.find(x => x.id === id);
+  if (!r.active) return showToast('⚠️ ร่องนี้ยังไม่ได้เปิดใช้งาน');
+  r.waterOn = !r.waterOn;
+  fbToggleWater(id, r.waterOn);
+  renderRows();
+  showToast(r.waterOn ? `💧 เปิดน้ำ ${r.name}` : `🔴 ปิดน้ำ ${r.name}`);
+}
+
+function emergencyStop() {
+  rows.forEach(r => {
+    r.waterOn = false;
+    if (db) db.ref(`farm/rows/row_${r.id}/waterOn`).set(false);
+  });
+  pushAlert({ type:'danger', icon:'⛔', title:'หยุดฉุกเฉิน — ปิดน้ำทุกร่อง', sub:'สั่งจากแอป Boss', time:now() });
+  renderRows();
+  showToast('⛔ ปิดน้ำทุกร่องแล้ว');
+}
+
+// ===== OVERRIDE sendMsg to use Firebase =====
+const _origSendMsg = sendMsg;
+function sendMsg() {
+  const el = document.getElementById('msgInput');
+  const text = el.value.trim();
+  if (!text) return;
+  const msg = { from:'boss', text, time:now() };
+  if (db) {
+    fbSendChat(activeWorker.id, msg);
+  } else {
+    if (!chatHistory[activeWorker.id]) chatHistory[activeWorker.id] = [];
+    chatHistory[activeWorker.id].push(msg);
+    renderChat();
+  }
+  el.value = ''; el.style.height = 'auto';
+
+  if (activeWorker.online) {
+    setTimeout(() => {
+      const area = document.getElementById('chatArea');
+      const t = document.createElement('div');
+      t.className = 'msg worker typing-wrap';
+      t.innerHTML = '<div class="typing-dots"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div>';
+      area.appendChild(t); area.scrollTop = area.scrollHeight;
+      const replies = ['รับทราบครับ 👍','โอเคครับ จะทำให้เลย','ครับผม เข้าใจแล้ว','โอเคค่ะ รับคำสั่งแล้ว'];
+      setTimeout(() => {
+        t.remove();
+        const reply = { from:'worker', name:activeWorker.name, text:replies[~~(Math.random()*replies.length)], time:now() };
+        if (db) fbSendChat(activeWorker.id, reply);
+        else { chatHistory[activeWorker.id].push(reply); renderChat(); }
+      }, 1200 + Math.random() * 800);
+    }, 600);
+  }
+}
+
+// ===== THRESHOLD SETTINGS UI =====
+function openThresholdModal(rowId) {
+  const r = rows.find(x => x.id === rowId);
+  if (!r || !r.active) return;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay open';
+  overlay.id = 'threshModal';
+  overlay.innerHTML = `
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-title">⚙️ ตั้งค่า Auto-Water — ${r.name}</div>
+      <div class="modal-body">
+        <div style="background:rgba(56,198,245,0.08);border:1px solid rgba(56,198,245,0.2);border-radius:12px;padding:12px;margin-bottom:14px;font-size:12px;color:var(--water);">
+          🤖 ระบบจะ<b>เปิดน้ำอัตโนมัติ</b>เมื่อความชื้นต่ำกว่า MIN<br>และ<b>ปิดน้ำอัตโนมัติ</b>เมื่อถึง MAX
+        </div>
+        <div class="form-group">
+          <label class="form-label">เปิดน้ำเมื่อความชื้น ต่ำกว่า (%)</label>
+          <input class="form-input" id="th-min" type="number" min="10" max="90" value="${r.moistureMin || 50}" />
+          <div style="font-size:10px;color:var(--text3);margin-top:4px;">แนะนำ: ทุเรียน 50% · องุ่น 55% · เมล่อน 60%</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">ปิดน้ำเมื่อความชื้น ถึง (%)</label>
+          <input class="form-input" id="th-max" type="number" min="50" max="100" value="${r.moistureMax || 75}" />
+        </div>
+        <div class="form-group" style="display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div style="font-size:13px;font-weight:600;">เปิดใช้ Auto-Water</div>
+            <div style="font-size:11px;color:var(--text2)">รดน้ำอัตโนมัติเมื่อถึงเงื่อนไข</div>
+          </div>
+          <div class="mini-toggle ${r.autoWater ? 'on' : ''}" id="autoToggle" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="document.getElementById('threshModal').remove()">ยกเลิก</button>
+        <button class="btn-save" onclick="saveThreshold(${rowId})">✅ บันทึก</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e => { if(e.target===overlay) overlay.remove(); });
+}
+
+function saveThreshold(rowId) {
+  const r = rows.find(x => x.id === rowId);
+  const min = parseInt(document.getElementById('th-min').value) || 50;
+  const max = parseInt(document.getElementById('th-max').value) || 75;
+  const auto = document.getElementById('autoToggle').classList.contains('on');
+
+  if (min >= max) return showToast('⚠️ MIN ต้องน้อยกว่า MAX');
+
+  r.moistureMin = min; r.moistureMax = max; r.autoWater = auto;
+
+  if (db) {
+    db.ref(`farm/rows/row_${rowId}`).update({ moistureMin: min, moistureMax: max, autoWater: auto });
+  }
+
+  document.getElementById('threshModal').remove();
+  showToast(`✅ บันทึกค่า Auto-Water ${r.name}`);
+  renderRows();
+}
+
+// Patch row item to show settings button
+const _origRenderRows = renderRows;
+function renderRows() {
+  const list = getFilteredRows();
+  const activeCount = rows.filter(r=>r.active).length;
+  const waterCount = rows.filter(r=>r.waterOn).length;
+  document.getElementById('statActive').textContent = activeCount;
+  document.getElementById('statActiveHeader').textContent = activeCount;
+  document.getElementById('statWater').textContent = waterCount;
+
+  document.getElementById('rowList').innerHTML = list.map(r => {
+    const crop = getCrop(r.crop);
+    const autoIcon = r.active && r.autoWater ? `<span style="font-size:9px;color:var(--water);margin-left:3px">${T('rowAuto')}</span>` : '';
+    return `
+    <div class="row-item ${r.waterOn?'water-on':''} ${!r.active?'inactive':''}"
+         style="--rc:${crop.color}">
+      <div class="row-num">${r.num}</div>
+      <div class="row-emoji" onclick="r.active&&openThresholdModal(${r.id})" style="cursor:${r.active?'pointer':'default'}">${crop.emoji}</div>
+      <div class="row-info" onclick="openEditModal(${r.id})" style="cursor:pointer;">
+        <div class="row-name">${r.name}${autoIcon}</div>
+        <div class="row-detail">${crop.name} · ${r.trees>0?r.trees+' ต้น':''} ${r.length!=='—'?'· '+r.length:''}</div>
+        <div class="row-zone">📍 ${r.zone} ${r.active&&r.moistureMin?`· ⚡${r.moistureMin}–${r.moistureMax}%`:''}</div>
+        ${r.active&&r.waterOn?`<div class="flow-dots" style="margin-top:4px"><div class="fdot"></div><div class="fdot"></div><div class="fdot"></div><span style="font-size:10px;color:var(--water);margin-left:2px">${T('rowWatering')}</span></div>`:''}
+      </div>
+      <div class="row-right">
+        <div class="mini-toggle ${r.waterOn&&r.active?'on':''}"
+             onclick="toggleWater(${r.id})">
+        </div>
+        ${getMoistureBadge(r)}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===== LOCAL SIM (fallback when no Firebase) =====
+let simInterval = null;
+function startLocalSim() {
+  if (simInterval) return;
+  simInterval = setInterval(() => {
+    rows.forEach(r => {
+      if (!r.active) return;
+      r.moisture = Math.round(Math.min(100, Math.max(10,
+        r.waterOn ? r.moisture + 2 : r.moisture - 1
+      )));
+    });
+    checkAutoWater();
+    renderRows();
+  }, 3000);
+}
+
+// ===== LANGUAGE SYSTEM =====
+let lang = 'th';
+
+const TH = {
+  farmName:       'ไร่ทุเรียน–องุ่น',
+  farmSub:        '📍 22 ร่อง · ใช้งาน',
+  farmSubSuffix:  'ร่อง',
+  weather:        '☀️ แล้ง · ลม 8 กม/ชม',
+  lblActive:      'ร่องใช้งาน',
+  lblWater:       '💧 เปิดน้ำ',
+  lblTotal:       'ทั้งหมด',
+  lblAlerts:      '⚠️ แจ้งเตือน',
+  lblRows:        'ร่องปลูก',
+  fcAll:          'ใช้งาน',
+  fcActive:       'ใช้งาน',
+  fcWater:        'เปิดน้ำ',
+  fcDry:          'แห้ง',
+  fcInactive:     '➕ ร่อง 6–22',
+  btnAddRow:      '＋ เพิ่มร่องใหม่',
+  lblNotif:       'การแจ้งเตือน',
+  btnEmg:         '⛔ หยุดฉุกเฉิน — ปิดน้ำทุกร่อง',
+  navHome:        'ภาพรวม',
+  navCmd:         'สั่งงาน',
+  navWork:        'คนงาน',
+  navSched:       'ตาราง',
+  lblCmdPage:     'สั่งงาน',
+  lblCmdTitle:    'Command Center',
+  lblSelWorker:   'เลือกลูกน้อง',
+  chatPlaceholder:'พิมพ์คำสั่ง...',
+  lblBroadcast:   '📢 ประกาศทีมทั้งหมด',
+  broadPlaceholder:'ข้อความถึงทุกคน...',
+  btnBroadcast:   '📣 ส่งหาทุกคน',
+  lblWorkersPage: 'คนงาน',
+  lblWorkersTitle:'คนงาน',
+  lblTodayStatus: 'สถานะวันนี้',
+  lblTasks:       'งานที่มอบหมาย',
+  btnAddWorker:   '＋ เพิ่มคนงานใหม่',
+  lblSchedPage:   'ตาราง',
+  lblSchedTitle:  'ตาราง',
+  lblAutoWater:   'รดน้ำอัตโนมัติ',
+  lblCalendar:    'ปฏิทินสัปดาห์นี้',
+  fbConnected:    '🔥 Firebase เชื่อมต่อแล้ว (Live)',
+  fbOffline:      '⚠️ ออฟไลน์ — ทำงานแบบ demo',
+  fbConnecting:   'กำลังเชื่อมต่อ Firebase...',
+  toastEmg:       '⛔ ปิดน้ำทุกร่องแล้ว',
+  calToday:       '📅 วันนี้: รดน้ำ 3 รอบ · ตัดแต่งกิ่งองุ่น B',
+  days:           ['จ','อ','พ','พฤ','ศ','ส','อา'],
+  // row card
+  rowWatering:    'กำลังรด',
+  rowAuto:        '🤖AUTO',
+  // worker card
+  cmdBtn:         '💬 สั่งงาน',
+  editBtn:        '✏️ แก้ไข',
+  online:         'ออนไลน์',
+  offline:        'ออฟไลน์',
+  // quick chips
+  qWater:  '💧 รดน้ำ',  qWaterMsg:  'รดน้ำโซนที่รับผิดชอบด้วยนะ',
+  qPrune:  '✂️ ตัดกิ่ง', qPruneMsg:  'ตัดแต่งกิ่งตามแผน',
+  qCheck:  '🔍 ตรวจโรงเรือน', qCheckMsg: 'ตรวจโรงเรือน รายงานผลด้วย',
+  qFert:   '🌱 ใส่ปุ๋ย', qFertMsg:   'ใส่ปุ๋ยตามโปรแกรม',
+  qPhoto:  '📸 ถ่ายรูป', qPhotoMsg:  'ถ่ายรูปส่งมาด้วย',
+  qMeet:   '📢 ประชุม',  qMeetMsg:   'มาประชุมที่โรงเรือนหลัก 10 นาที',
+};
+
+const EN = {
+  farmName:       'Durian–Grape Farm',
+  farmSub:        '📍 22 Rows · Active',
+  farmSubSuffix:  'rows',
+  weather:        '☀️ Dry · Wind 8km/h',
+  lblActive:      'Active Rows',
+  lblWater:       '💧 Watering',
+  lblTotal:       'Total',
+  lblAlerts:      '⚠️ Alerts',
+  lblRows:        'Farm Rows',
+  fcAll:          'Active',
+  fcActive:       'Active',
+  fcWater:        'Watering',
+  fcDry:          'Dry',
+  fcInactive:     '➕ Rows 6–22',
+  btnAddRow:      '＋ Add New Row',
+  lblNotif:       'Notifications',
+  btnEmg:         '⛔ EMERGENCY STOP — Close All Water',
+  navHome:        'Overview',
+  navCmd:         'Command',
+  navWork:        'Workers',
+  navSched:       'Schedule',
+  lblCmdPage:     'Command',
+  lblCmdTitle:    'Command Center',
+  lblSelWorker:   'Select Worker',
+  chatPlaceholder:'Type command...',
+  lblBroadcast:   '📢 Broadcast to All',
+  broadPlaceholder:'Message to everyone...',
+  btnBroadcast:   '📣 Send to Everyone',
+  lblWorkersPage: 'Workers',
+  lblWorkersTitle:'Workers',
+  lblTodayStatus: "Today's Status",
+  lblTasks:       'Assigned Tasks',
+  btnAddWorker:   '＋ Add New Worker',
+  lblSchedPage:   'Schedule',
+  lblSchedTitle:  'Schedule',
+  lblAutoWater:   'Auto Watering',
+  lblCalendar:    'This Week',
+  fbConnected:    '🔥 Firebase Connected (Live)',
+  fbOffline:      '⚠️ Offline — Demo mode',
+  fbConnecting:   'Connecting to Firebase...',
+  toastEmg:       '⛔ All water closed',
+  calToday:       '📅 Today: Water 3 rounds · Prune Grape B',
+  days:           ['M','T','W','T','F','S','S'],
+  rowWatering:    'Watering',
+  rowAuto:        '🤖AUTO',
+  cmdBtn:         '💬 Command',
+  editBtn:        '✏️ Edit',
+  online:         'Online',
+  offline:        'Offline',
+  qWater:  '💧 Water',   qWaterMsg:  'Please water your assigned zone',
+  qPrune:  '✂️ Prune',   qPruneMsg:  'Prune branches as planned',
+  qCheck:  '🔍 Inspect', qCheckMsg:  'Check greenhouse and report',
+  qFert:   '🌱 Fertilize',qFertMsg:  'Apply fertilizer as scheduled',
+  qPhoto:  '📸 Photo',   qPhotoMsg:  'Take photos and send',
+  qMeet:   '📢 Meeting', qMeetMsg:   'Come to main greenhouse in 10 min',
+};
+
+function T(key) { return (lang==='th' ? TH : EN)[key] || key; }
+
+function toggleLang() {
+  lang = lang === 'th' ? 'en' : 'th';
+  applyLang();
+  showToast(lang === 'th' ? '🇹🇭 ภาษาไทย' : '🇬🇧 English');
+}
+
+function applyLang() {
+  const isTH = lang === 'th';
+  const btn = document.getElementById('langBtn');
+  btn.textContent = isTH ? '🇹🇭 TH' : '🇬🇧 EN';
+  btn.style.color = isTH ? 'var(--lime)' : '#58a6ff';
+  btn.style.borderColor = isTH ? 'rgba(158,208,64,0.4)' : 'rgba(88,166,255,0.4)';
+  btn.style.background = isTH ? 'rgba(158,208,64,0.08)' : 'rgba(88,166,255,0.08)';
+
+  // Header
+  document.querySelector('.farm-name').textContent = T('farmName');
+  const activeCount = rows.filter(r=>r.active).length;
+  document.querySelector('.farm-sub').innerHTML =
+    `${T('farmSub')} <span id="statActiveHeader">${activeCount}</span> ${T('farmSubSuffix')}`;
+  document.getElementById('weatherSub').textContent = T('weather');
+
+  // Stats
+  setText('lbl-active',   T('lblActive'));
+  setText('lbl-water',    T('lblWater'));
+  setText('lbl-total',    T('lblTotal'));
+  setText('lbl-alerts',   T('lblAlerts'));
+
+  // Row section
+  setText('lbl-rows',     T('lblRows'));
+  setText('fc-all',       T('fcAll'));
+  setText('fc-active',    T('fcActive'));
+  setText('fc-water',     T('fcWater'));
+  setText('fc-dry',       T('fcDry'));
+  setText('fc-inactive',  T('fcInactive'));
+  setText('btn-addrow',   T('btnAddRow'));
+  setText('lbl-notif',    T('lblNotif'));
+  setText('btn-emg',      T('btnEmg'));
+
+  // Nav
+  setText('nav-home',  T('navHome'));
+  setText('nav-cmd',   T('navCmd'));
+  setText('nav-work',  T('navWork'));
+  setText('nav-sched', T('navSched'));
+
+  // Command page
+  setText('lbl-cmd-page',   T('lblCmdPage'));
+  setText('lbl-cmd-title',  T('lblCmdTitle'));
+  setText('lbl-selectworker', T('lblSelWorker'));
+  setText('lbl-broadcast',  T('lblBroadcast'));
+  setText('btn-broadcast',  `📣 ${T('btnBroadcast')} (${workers.filter(w=>w.online).length} ${isTH?'คน':'workers'})`);
+  const bi = document.getElementById('broadInput');
+  if (bi) bi.placeholder = T('broadPlaceholder');
+  const mi = document.getElementById('msgInput');
+  if (mi) mi.placeholder = T('chatPlaceholder');
+
+  // Workers page
+  setText('lbl-workers-page',  T('lblWorkersPage'));
+  setText('lbl-workers-title', T('lblWorkersTitle'));
+  setText('lbl-todaystatus',   T('lblTodayStatus'));
+  setText('lbl-tasks',         T('lblTasks'));
+  setText('btn-addworker',     T('btnAddWorker'));
+
+  // Schedule page
+  setText('lbl-sched-page',  T('lblSchedPage'));
+  setText('lbl-sched-title', T('lblSchedTitle'));
+  setText('lbl-autowater',   T('lblAutoWater'));
+  setText('lbl-calendar',    T('lblCalendar'));
+
+  // Quick chips — rebuild
+  const qBar = document.querySelector('.quick-bar');
+  if (qBar) {
+    qBar.innerHTML = `
+      <div class="qchip" onclick="sendQuick('${T('qWaterMsg')}')">${T('qWater')}</div>
+      <div class="qchip" onclick="sendQuick('${T('qPruneMsg')}')">${T('qPrune')}</div>
+      <div class="qchip" onclick="sendQuick('${T('qCheckMsg')}')">${T('qCheck')}</div>
+      <div class="qchip" onclick="sendQuick('${T('qFertMsg')}')">${T('qFert')}</div>
+      <div class="qchip" onclick="sendQuick('${T('qPhotoMsg')}')">${T('qPhoto')}</div>
+      <div class="qchip" onclick="sendQuick('${T('qMeetMsg')}')">${T('qMeet')}</div>
+    `;
+  }
+
+  // Firebase label
+  const fbLbl = document.getElementById('fbLabel');
+  if (fbLbl) {
+    if (fbConnected) fbLbl.textContent = T('fbConnected');
+    else fbLbl.textContent = T('fbOffline');
+  }
+
+  // Re-render dynamic pages
+  renderRows();
+  renderWorkers();
+  renderSchedule();
+}
+
+function setText(id, text) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = text;
+}
+
+// ===== INIT =====
+renderRows();
+renderAlerts();
+
+// Start Firebase
+initFirebase().then(() => {
+  // If not connected after 4s, fallback to simulation
+  setTimeout(() => {
+    if (!fbConnected) startLocalSim();
+  }, 4000);
+});
+</script>
+</body>
+</html>
